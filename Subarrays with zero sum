@@ -1,0 +1,49 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+vector<pair<int, int>> findZeroSubarrays(vector<int>& arr) {
+    unordered_map<int, vector<int>> sum_map;  // To store indices of cumulative sums
+    vector<pair<int, int>> result;            // To store pairs of (start, end) indices of zero-sum subarrays
+    int curr_sum = 0;                         // To store the running cumulative sum
+
+    for (int i = 0; i < arr.size(); ++i) {
+        curr_sum += arr[i];
+
+        // If cumulative sum is zero, subarray from 0 to i has sum zero
+        if (curr_sum == 0) {
+            result.push_back({0, i});
+        }
+
+        // If the cumulative sum has been seen before
+        if (sum_map.find(curr_sum) != sum_map.end()) {
+            // Add all subarrays between previous occurrences and the current index
+            for (int start_index : sum_map[curr_sum]) {
+                result.push_back({start_index + 1, i});
+            }
+        }
+
+        // Store the current index for the current sum
+        sum_map[curr_sum].push_back(i);
+    }
+
+    return result;
+}
+
+int main() {
+    vector<int> arr = {1, 2, -3, 3, -1, 2};
+    vector<pair<int, int>> output = findZeroSubarrays(arr);
+
+    // Output the result
+    if (output.empty()) {
+        cout << "No zero-sum subarrays found" << endl;
+    } else {
+        for (auto& p : output) {
+            cout << "(" << p.first << ", " << p.second << ")" << endl;
+        }
+    }
+
+    return 0;
+}
