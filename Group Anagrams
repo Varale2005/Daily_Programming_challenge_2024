@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    // Create an unordered_map to store the grouped anagrams
+    unordered_map<string, vector<string>> anagrams;
+    
+    // Iterate over each string in the input array
+    for (string& word : strs) {
+        // Sort the characters of the word to form the key
+        string sorted_word = word;
+        sort(sorted_word.begin(), sorted_word.end());
+        
+        // Append the original word to the list corresponding to the sorted key
+        anagrams[sorted_word].push_back(word);
+    }
+    
+    // Collect all the grouped anagrams from the map
+    vector<vector<string>> result;
+    for (auto& entry : anagrams) {
+        result.push_back(entry.second);
+    }
+    
+    return result;
+}
+
+int main() {
+    // Example input
+    vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
+    
+    // Get the grouped anagrams
+    vector<vector<string>> grouped_anagrams = groupAnagrams(strs);
+    
+    // Print the result
+    for (const auto& group : grouped_anagrams) {
+        cout << "[";
+        for (const auto& word : group) {
+            cout << word << " ";
+        }
+        cout << "]" << endl;
+    }
+    
+    return 0;
+}
