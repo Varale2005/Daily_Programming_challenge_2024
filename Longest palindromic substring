@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to expand around the center and return the longest palindromic substring
+string expandAroundCenter(const string& s, int left, int right) {
+    // Expand while the characters are the same and within bounds
+    while (left >= 0 && right < s.size() && s[left] == s[right]) {
+        left--;
+        right++;
+    }
+    // Return the palindromic substring
+    return s.substr(left + 1, right - left - 1);
+}
+
+// Function to find the longest palindromic substring
+string longestPalindrome(string s) {
+    if (s.empty()) return "";
+    
+    string longest = "";
+    
+    for (int i = 0; i < s.size(); ++i) {
+        // Check for odd-length palindromes (centered at i)
+        string odd_palindrome = expandAroundCenter(s, i, i);
+        
+        // Check for even-length palindromes (centered between i and i+1)
+        string even_palindrome = expandAroundCenter(s, i, i + 1);
+        
+        // Update the longest palindrome found
+        if (odd_palindrome.size() > longest.size()) {
+            longest = odd_palindrome;
+        }
+        if (even_palindrome.size() > longest.size()) {
+            longest = even_palindrome;
+        }
+    }
+    
+    return longest;
+}
+
+int main() {
+    // Example input
+    string s1 = "babad";
+    string s2 = "cbbd";
+    
+    // Print the longest palindromic substring for test cases
+    cout << "Longest palindrome in " << s1 << " is: " << longestPalindrome(s1) << endl;
+    cout << "Longest palindrome in " << s2 << " is: " << longestPalindrome(s2) << endl;
+    
+    return 0;
+}
