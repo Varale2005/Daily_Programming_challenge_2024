@@ -1,0 +1,52 @@
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+using namespace std;
+
+// Function to count substrings with at most 'k' distinct characters
+int countAtMostKDistinct(const string& s, int k) {
+    unordered_map<char, int> charCount; // To store character frequencies
+    int left = 0, right = 0;
+    int count = 0;  // Total count of substrings
+    int distinct = 0;  // Number of distinct characters in the window
+
+    while (right < s.size()) {
+        // Expand the window by adding the current character
+        char rightChar = s[right];
+        charCount[rightChar]++;
+        if (charCount[rightChar] == 1) {
+            distinct++;  // New distinct character added
+        }
+        right++;
+
+        // Shrink the window if distinct characters exceed 'k'
+        while (distinct > k) {
+            char leftChar = s[left];
+            charCount[leftChar]--;
+            if (charCount[leftChar] == 0) {
+                distinct--;  // A distinct character is removed
+            }
+            left++;
+        }
+
+        // Add the number of valid substrings from this window
+        count += (right - left);
+    }
+
+    return count;
+}
+
+// Function to count substrings with exactly 'k' distinct characters
+int countExactKDistinct(const string& s, int k) {
+    return countAtMostKDistinct(s, k) - countAtMostKDistinct(s, k - 1);
+}
+
+int main() {
+    string s = "pqpqs";
+    int k = 2;
+    
+    cout << "Number of substrings with exactly " << k << " distinct characters: " << countExactKDistinct(s, k) << endl;
+    
+    return 0;
+}
