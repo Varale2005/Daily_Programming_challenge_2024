@@ -1,0 +1,50 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+bool isValid(string s) {
+    // Stack to store opening brackets
+    stack<char> st;
+    
+    // Traverse through the string
+    for (char c : s) {
+        // If opening bracket, push it onto the stack
+        if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        }
+        // If closing bracket, check if it matches the top of the stack
+        else {
+            if (st.empty()) return false; // No corresponding opening bracket
+            
+            char top = st.top();
+            st.pop();
+            
+            // Check if the closing bracket matches the top of the stack
+            if ((c == ')' && top != '(') ||
+                (c == '}' && top != '{') ||
+                (c == ']' && top != '[')) {
+                return false;
+            }
+        }
+    }
+    
+    // If stack is empty, all brackets matched correctly
+    return st.empty();
+}
+
+int main() {
+    // Test cases
+    string s1 = "()[]{}";
+    string s2 = "(]";
+    string s3 = "([{}])";
+    string s4 = "([)]";
+
+    cout << isValid(s1) << endl;  // Output: 1 (true)
+    cout << isValid(s2) << endl;  // Output: 0 (false)
+    cout << isValid(s3) << endl;  // Output: 1 (true)
+    cout << isValid(s4) << endl;  // Output: 0 (false)
+
+    return 0;
+}
