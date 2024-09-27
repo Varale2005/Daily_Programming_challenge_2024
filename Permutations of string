@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+void backtrack(string& s, vector<bool>& used, string& current, vector<string>& result) {
+    if (current.size() == s.size()) {
+        result.push_back(current);
+        return;
+    }
+    
+    // Iterate over each character in the string
+    for (int i = 0; i < s.size(); ++i) {
+        // Skip used characters or duplicate characters (when the previous one is not used)
+        if (used[i] || (i > 0 && s[i] == s[i - 1] && !used[i - 1])) continue;
+        
+        // Mark this character as used
+        used[i] = true;
+        current.push_back(s[i]);
+        
+        // Recursively generate permutations for the remaining characters
+        backtrack(s, used, current, result);
+        
+        // Backtrack: unmark the character and remove it from the current permutation
+        used[i] = false;
+        current.pop_back();
+    }
+}
+
+vector<string> permuteUnique(string s) {
+    // Sort the string to handle duplicates
+    sort(s.begin(), s.end());
+    
+    // To track used characters and store the current permutation
+    vector<bool> used(s.size(), false);
+    string current;
+    vector<string> result;
+    
+    // Start the backtracking process
+    backtrack(s, used, current, result);
+    
+    return result;
+}
+
+int main() {
+    string s = "abc";  // Test case: change this value for different inputs
+    vector<string> permutations = permuteUnique(s);
+    
+    // Print the result
+    for (const auto& perm : permutations) {
+        cout << perm << endl;
+    }
+    
+    return 0;
+}
